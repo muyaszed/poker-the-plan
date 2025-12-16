@@ -8,47 +8,57 @@ import {
   Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from './user.entity';
+import { UserResponseDto } from 'src/auth/dto/auth-response.dto';
+import { RegisterDto } from 'src/auth/dto/register.dto';
+import { UpdateUserDto } from 'src/auth/dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Post()
-  createUser(@Body() userData: Partial<User>): Promise<User> {
-    return this.userService.createUser(userData);
+  async createUser(@Body() registerDto: RegisterDto): Promise<UserResponseDto> {
+    const user = await this.userService.createUser(registerDto);
+    return new UserResponseDto(user);
   }
 
   @Get()
-  getAllUsers(): Promise<User[]> {
-    return this.userService.findAll();
+  async getAllUsers(): Promise<UserResponseDto[]> {
+    const users = await this.userService.findAll();
+    return users.map((user) => new UserResponseDto(user));
   }
 
   @Get(':id')
-  getUserById(@Param('id') id: string): Promise<User> {
-    return this.userService.findById(id);
+  async getUserById(@Param('id') id: string): Promise<UserResponseDto> {
+    return new UserResponseDto(await this.userService.findById(id));
   }
 
   @Get(':email')
-  getUserByEmail(@Param('email') email: string): Promise<User> {
-    return this.userService.findByEmail(email);
+  async getUserByEmail(
+    @Param('email') email: string,
+  ): Promise<UserResponseDto> {
+    return new UserResponseDto(await this.userService.findByEmail(email));
   }
 
   @Get(':username')
-  getUserByUserName(@Param('username') username: string): Promise<User> {
-    return this.userService.findByUsername(username);
+  async getUserByUserName(
+    @Param('username') username: string,
+  ): Promise<UserResponseDto> {
+    return new UserResponseDto(await this.userService.findByUsername(username));
   }
 
   @Delete(':id')
-  softDeleteUser(id: string): Promise<User> {
-    return this.userService.softDeleteUser(id);
+  async softDeleteUser(id: string): Promise<UserResponseDto> {
+    return new UserResponseDto(await this.userService.softDeleteUser(id));
   }
 
   @Put(':id')
-  updateUser(
+  async updateUser(
     @Param('id') id: string,
-    @Body() updatedData: User,
-  ): Promise<User> {
-    return this.userService.updateUser(id, updatedData);
+    @Body() updatedData: UpdateUserDto,
+  ): Promise<UserResponseDto> {
+    return new UserResponseDto(
+      await this.userService.updateUser(id, updatedData),
+    );
   }
 }
