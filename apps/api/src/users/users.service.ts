@@ -41,31 +41,31 @@ export class UsersService {
     return user;
   }
 
-  async findByEmail(email: string): Promise<User> {
+  async findByEmail(email: string): Promise<User | null> {
     const user = await this.userRepository.findOne({
       where: { email, isActive: true },
     });
 
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    // if (!user) {
+    //   throw new NotFoundException('User not found');
+    // }
 
     return user;
   }
 
-  async findByUsername(username: string): Promise<User> {
+  async findByUsername(username: string): Promise<User | null> {
     const user = await this.userRepository.findOne({
       where: { username, isActive: true },
     });
 
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    // if (!user) {
+    //   throw new NotFoundException('User not found');
+    // }
 
     return user;
   }
 
-  async createUser(user: Partial<User>): Promise<User> {
+  async create(user: Partial<User>): Promise<User> {
     const existingEmail = await this.findByEmail(user.email || '');
     if (existingEmail) {
       throw new ConflictException('Email already exist');
@@ -80,7 +80,7 @@ export class UsersService {
     return this.userRepository.save(newUser);
   }
 
-  async updateUser(id: string, newUser: Partial<User>): Promise<User> {
+  async update(id: string, newUser: Partial<User>): Promise<User> {
     const user = await this.findById(id);
     delete newUser.email;
     delete newUser.username;
@@ -95,7 +95,7 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  async validateUser(email: string, password: string): Promise<User | null> {
+  async validate(email: string, password: string): Promise<User | null> {
     const user = await this.userRepository.findOne({
       where: { email, isActive: true },
     });

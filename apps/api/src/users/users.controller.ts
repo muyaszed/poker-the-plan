@@ -18,7 +18,7 @@ export class UsersController {
 
   @Post()
   async createUser(@Body() registerDto: RegisterDto): Promise<UserResponseDto> {
-    const user = await this.userService.createUser(registerDto);
+    const user = await this.userService.create(registerDto);
     return new UserResponseDto(user);
   }
 
@@ -33,19 +33,19 @@ export class UsersController {
     return new UserResponseDto(await this.userService.findById(id));
   }
 
-  @Get(':email')
-  async getUserByEmail(
-    @Param('email') email: string,
-  ): Promise<UserResponseDto> {
-    return new UserResponseDto(await this.userService.findByEmail(email));
-  }
+  //   @Get(':email')
+  //   async getUserByEmail(
+  //     @Param('email') email: string,
+  //   ): Promise<UserResponseDto> {
+  //     return new UserResponseDto(await this.userService.findByEmail(email));
+  //   }
 
-  @Get(':username')
-  async getUserByUserName(
-    @Param('username') username: string,
-  ): Promise<UserResponseDto> {
-    return new UserResponseDto(await this.userService.findByUsername(username));
-  }
+  //   @Get(':username')
+  //   async getUserByUserName(
+  //     @Param('username') username: string,
+  //   ): Promise<UserResponseDto> {
+  //     return new UserResponseDto(await this.userService.findByUsername(username));
+  //   }
 
   @Delete(':id')
   async softDeleteUser(id: string): Promise<UserResponseDto> {
@@ -57,8 +57,6 @@ export class UsersController {
     @Param('id') id: string,
     @Body() updatedData: UpdateUserDto,
   ): Promise<UserResponseDto> {
-    return new UserResponseDto(
-      await this.userService.updateUser(id, updatedData),
-    );
+    return new UserResponseDto(await this.userService.update(id, updatedData));
   }
 }

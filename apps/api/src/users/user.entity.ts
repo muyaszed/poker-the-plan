@@ -3,12 +3,14 @@ import {
   BeforeUpdate,
   Column,
   CreateDateColumn,
+  Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcryptjs';
 
+@Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
