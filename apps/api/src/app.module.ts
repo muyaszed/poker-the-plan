@@ -6,6 +6,10 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { EventsModule } from './events/events.module';
+import { APP_GUARD } from '@nestjs/core';
+import { WebsocketGuard } from './auth/guard/websocket.guard';
+import { JwtService } from '@nestjs/jwt';
 dotenv.config();
 
 console.log('Here in app', process.env.DB_HOST);
@@ -23,8 +27,16 @@ console.log('Here in app', process.env.DB_HOST);
       autoLoadEntities: true,
       synchronize: true,
     }),
+    EventsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: WebsocketGuard,
+    },
+    JwtService,
+  ],
 })
 export class AppModule {}
