@@ -1,4 +1,4 @@
-import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { Logger, UseGuards } from '@nestjs/common';
@@ -19,10 +19,20 @@ export class EventsGateway {
       SocketAuthMiddleware(this.jwtService) as any,
     );
   }
+
+  handleConnection(client: Socket) {
+    Logger.log('Handle connection');
+  }
   
   @SubscribeMessage('message')
-  handleMessage(client: any, payload: any): string {
-    return 'Hello world!';
+  handleMessage(@ConnectedSocket() client: Socket, @MessageBody() payload: any): void {
+    Logger.log({payload}, "Recieved message")
+    this.server.emit('message', {
+      message: `Broadcast to all: ${payload.message || ''}`,
+      // message: `Broadcast to all: ${JSON.parse(payload).message || ''}`,
+      timestamp: new Date().toISOString(),
+      fromClient: client.id,
+    })
   }
 
   sendMessage(message: string) {
