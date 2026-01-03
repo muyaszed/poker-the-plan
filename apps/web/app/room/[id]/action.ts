@@ -8,7 +8,7 @@ export async function getRoom(roomId: string) {
     if (!userId || !token) {
         redirect('/auth/signin');
     }
-    const response = await fetch(`http://localhost:3002/api/v1/rooms/${roomId}`, {
+    const response = await fetch(`${process.env.BACKEND_SERVER}/api/v1/rooms/${roomId}`, {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',

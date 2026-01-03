@@ -2,9 +2,8 @@
 
 import { createContext, ReactNode, use, useEffect } from "react";
 import { io, Socket } from "socket.io-client";
-import { verifySession } from "./auth/session";
 
-const socket = io('ws://localhost:3002', {
+const socket = io(`${process.env.NEXT_PUBLIC_WS_SERVER}`, {
     autoConnect: false,
 })
 export const WebsocketContext = createContext<Socket>(socket);

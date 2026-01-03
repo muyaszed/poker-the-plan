@@ -6,7 +6,7 @@ import { createSession, deleteSession } from "./session";
 export async function signIn(formData: FormData) {
     const email = formData.get('email');
     const password = formData.get('password')
-    const response = await fetch('http://localhost:3002/api/v1/auth/login', {
+    const response = await fetch(`${process.env.BACKEND_SERVER}/api/v1/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -30,7 +30,7 @@ export async function signUp(formData: FormData) {
     const password = formData.get('password')
     const username = formData.get('username')
 
-    const response = await fetch('http://localhost:3002/api/v1/auth/register', {
+    const response = await fetch(`${process.env.BACKEND_SERVER}/api/v1/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, username }),

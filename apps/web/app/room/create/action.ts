@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { verifySession } from "../../auth/session";
-import { refresh, revalidatePath } from "next/cache";
+import { refresh } from "next/cache";
 
 export async function createNewRoom(formData: FormData) {
     const name = formData.get('name');
@@ -11,7 +11,7 @@ export async function createNewRoom(formData: FormData) {
     if (!userId || !token) {
         redirect('/auth/signin');
     }
-    const response = await fetch('http://localhost:3002/api/v1/rooms', {
+    const response = await fetch(`${process.env.BACKEND_SERVER}/api/v1/rooms`, {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ export async function removeRoom(roomId: string) {
     if (!userId || !token) {
         redirect('/auth/signin');
     }
-    const response = await fetch(`http://localhost:3002/api/v1/rooms/${roomId}`, {
+    const response = await fetch(`${process.env.BACKEND_SERVER}/api/v1/rooms/${roomId}`, {
         method: 'DELETE',
         headers: { 
             'Authorization': `Bearer ${token}`
@@ -50,7 +50,7 @@ export async function getAllRooms() {
         redirect('/auth/signin');
     }
 
-    const response = await fetch('http://localhost:3002/api/v1/rooms', {
+    const response = await fetch(`${process.env.BACKEND_SERVER}/api/v1/rooms`, {
         method: 'GET',
         headers: { 
             'Authorization': `Bearer ${token}`
@@ -69,7 +69,7 @@ export async function getMyRooms() {
         redirect('/auth/signin');
     }
 
-    const response = await fetch(`http://localhost:3002/api/v1/rooms/my-room/${userId}`, {
+    const response = await fetch(`${process.env.BACKEND_SERVER}/api/v1/rooms/my-room/${userId}`, {
         method: 'GET',
         headers: { 
             'Authorization': `Bearer ${token}`
@@ -81,49 +81,3 @@ export async function getMyRooms() {
     }
     return data;
 }
-
-
-// export async function joinRoom(roomId: string) {
-//     const { userId, token } = await verifySession();
-//     if (!userId || !token) {
-//         redirect('/auth/signin');
-//     }
-//     const payload = {
-//         userId,
-//     }
-//     console.log(payload)
-//     const response = await fetch(`http://localhost:3002/api/v1/rooms/${roomId}/enter`, {
-//         method: 'POST',
-//         headers: { 
-//             'Content-Type': 'application/json',
-//             'Authorization': `Bearer ${token}`
-//         },
-//         body: JSON.stringify(payload),
-//     });
-//         const data = await response.json();
-
-//     console.log(response, data);
-// }
-
-// export async function leaveRoom(roomId: string) {
-//     const { userId, token } = await verifySession();
-//     if (!userId || !token) {
-//         redirect('/auth/signin');
-//     }
-//     const payload = {
-//         userId,
-//     }
-//     console.log('Start calling leave api')
-//     const response = await fetch(`http://localhost:3002/api/v1/rooms/${roomId}/leave`, {
-//         method: 'POST',
-//         headers: { 
-//             'Content-Type': 'application/json',
-//             'Authorization': `Bearer ${token}`
-//         },
-//         body: JSON.stringify(payload),
-//     });
-//         const data = await response.json();
-
-//     console.log(response, data);
-//     redirect('/room/create');
-// }

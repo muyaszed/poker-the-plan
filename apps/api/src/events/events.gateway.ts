@@ -1,4 +1,4 @@
-import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { Logger, UseGuards } from '@nestjs/common';
@@ -7,7 +7,7 @@ import { SocketAuthMiddleware } from 'src/auth/middleware/websocket.middleware';
 
 @WebSocketGateway({ 
   cors: {
-    origin: ['http://localhost:3000']
+    origin: [process.env.FRONTEND_SERVER]
   }
 })
 @UseGuards(WebsocketGuard)
