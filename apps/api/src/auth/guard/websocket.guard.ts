@@ -18,7 +18,6 @@ export class WebsocketGuard implements CanActivate {
         }
 
         const client: Socket = context.switchToWs().getClient();
-        const { authorization } = client.handshake.headers;
 
         WebsocketGuard.validateToken(client, this.jwtService);
 
@@ -30,10 +29,9 @@ export class WebsocketGuard implements CanActivate {
         jwtService: JwtService,
     ) {
         try {
-            const { authorization } = client.handshake.headers;
-            const token: string = authorization && typeof authorization === 'string' ? authorization.split(' ')[1] : '';
+            const { token } = client.handshake.auth;
             const payload = jwtService.verify(token, {
-                secret: 'asupersecretkey'
+                secret: process.env.JWT_SECRET
             });
             return payload;
             

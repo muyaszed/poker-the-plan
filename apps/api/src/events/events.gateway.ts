@@ -1,11 +1,15 @@
-import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { Logger, UseGuards } from '@nestjs/common';
 import { WebsocketGuard } from 'src/auth/guard/websocket.guard';
 import { SocketAuthMiddleware } from 'src/auth/middleware/websocket.middleware';
 
-@WebSocketGateway({ namespace: 'events' })
+@WebSocketGateway({ 
+  cors: {
+    origin: ['http://localhost:3000']
+  }
+})
 @UseGuards(WebsocketGuard)
 export class EventsGateway {
   constructor(
@@ -19,13 +23,12 @@ export class EventsGateway {
       SocketAuthMiddleware(this.jwtService) as any,
     );
   }
-  
-  @SubscribeMessage('message')
-  handleMessage(client: any, payload: any): string {
-    return 'Hello world!';
+
+  handleConnection(client: Socket) {
+    Logger.log('Websocket connected');
   }
 
-  sendMessage(message: string) {
-    this.server.emit('newMessage', message);
+  handleDisconnect() {
+    Logger.log('Websocket disconnected');
   }
 }

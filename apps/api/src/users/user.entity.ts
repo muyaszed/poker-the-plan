@@ -4,11 +4,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcryptjs';
+import { Room } from 'src/rooms/room.entity';
 
 @Entity()
 export class User {
@@ -39,6 +42,12 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Room, room => room.owner)
+  ownedRooms: Room[];
+
+  @ManyToMany(() => Room, room => room.users)
+  rooms: Room[]
 
   @BeforeInsert()
   @BeforeUpdate()
