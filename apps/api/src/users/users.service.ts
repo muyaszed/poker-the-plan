@@ -32,6 +32,9 @@ export class UsersService {
         'createdAt',
         'updatedAt',
       ],
+      relations: {
+        ownedRooms: true,
+      }
     });
 
     if (!user) {
@@ -46,10 +49,6 @@ export class UsersService {
       where: { email, isActive: true },
     });
 
-    // if (!user) {
-    //   throw new NotFoundException('User not found');
-    // }
-
     return user;
   }
 
@@ -57,10 +56,6 @@ export class UsersService {
     const user = await this.userRepository.findOne({
       where: { username, isActive: true },
     });
-
-    // if (!user) {
-    //   throw new NotFoundException('User not found');
-    // }
 
     return user;
   }

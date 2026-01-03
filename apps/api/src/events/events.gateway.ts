@@ -5,7 +5,11 @@ import { Logger, UseGuards } from '@nestjs/common';
 import { WebsocketGuard } from 'src/auth/guard/websocket.guard';
 import { SocketAuthMiddleware } from 'src/auth/middleware/websocket.middleware';
 
-@WebSocketGateway({ namespace: 'events' })
+@WebSocketGateway({ 
+  cors: {
+    origin: ['http://localhost:3000']
+  }
+})
 @UseGuards(WebsocketGuard)
 export class EventsGateway {
   constructor(
@@ -21,21 +25,10 @@ export class EventsGateway {
   }
 
   handleConnection(client: Socket) {
-    Logger.log('Handle connection');
-  }
-  
-  @SubscribeMessage('message')
-  handleMessage(@ConnectedSocket() client: Socket, @MessageBody() payload: any): void {
-    Logger.log({payload}, "Recieved message")
-    this.server.emit('message', {
-      message: `Broadcast to all: ${payload.message || ''}`,
-      // message: `Broadcast to all: ${JSON.parse(payload).message || ''}`,
-      timestamp: new Date().toISOString(),
-      fromClient: client.id,
-    })
+    Logger.log('Websocket connected');
   }
 
-  sendMessage(message: string) {
-    this.server.emit('newMessage', message);
+  handleDisconnect() {
+    Logger.log('Websocket disconnected');
   }
 }

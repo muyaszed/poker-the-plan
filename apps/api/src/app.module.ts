@@ -12,6 +12,7 @@ import { WebsocketGuard } from './auth/guard/websocket.guard';
 import { JwtService } from '@nestjs/jwt';
 import { DataSource } from 'typeorm';
 import { dataSourceOption } from './typeorm.config';
+import { RoomsModule } from './rooms/rooms.module';
 dotenv.config();
 
 @Module({
@@ -20,6 +21,7 @@ dotenv.config();
     UsersModule,
     TypeOrmModule.forRoot(dataSourceOption),
     EventsModule,
+    RoomsModule,
   ],
   controllers: [AppController],
   providers: [
